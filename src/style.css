@@ -1,0 +1,73 @@
+#homeButton {
+    color: rgb(105, 105, 110);
+    background: none;
+    border: none;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, 25%);
+    font-weight: 5px;
+    transition: all 0.37s ease;
+    cursor: pointer;
+}
+
+#homeButton:hover {
+    font-size: 15px;
+}
+
+body {
+    background-color: rgb(50, 50, 55);
+    color: rgb(105, 105, 110);
+    font-family: monospace;
+    margin: 0px;
+    padding: 0px;
+}  
+
+* {
+    margin: 0px;
+}
+
+.data {
+   position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+}
+
+.data p {
+    font-size: 2em;
+    text-align: center;
+    text-wrap: wrap;
+    margin: 0px;
+    padding: 0px;
+}
+
+.correctCharacter {
+    color: white;
+}
+
+.incorrectCharacter {
+    color: rgb(255, 100, 100);   
+}
+
+.menu {
+    display: none;
+}
+
+#paragraph {
+    font-size: 2em;
+    text-align: center;
+    text-wrap: wrap;
+    margin: 0px;
+    padding: 0px;
+}
+
+.paragraphBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+
+    
+}
