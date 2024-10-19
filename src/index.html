@@ -8,7 +8,9 @@
   </head>
   <body>
     <!-- STYLE !-->
+    <p id="timeLeft">15</p>
     <div class="paragraphBox">
+         
         <pre>
             <p id="paragraph">Failed to load sentence</p>
         </pre>
@@ -20,9 +22,40 @@
         <p id="timer"></p>
         <p id="correctCharacters"></p>
         <p id="rawwpm"></p>
+
+        
     </div>
     
-    <button id="homeButton"><h3>Speedtypers</h3></button>
+    <button id="homeButton">Speedtypers</button>
+    <div id="buttonsList">
+      <button class="button" id="settings">Settings</button>
+    </div>
+
+    <div id="settingsMenu">
+        <h2 class="bigLabels">Test Type</h2>
+        <hr>
+        <br>
+        <button class="settingButtons" id="RandomWords">Random Words</button>
+        <br>
+        <br>
+        <button class="settingButtons" id="RandomQuote">Random Quote</button>
+        <br>
+        <br>
+        <h2 class="bigLabels">Timed</h2>
+        <hr>
+        <br>
+        <button class="settingButtons" id="TimeTest15">15 Seconds</button>
+        <br>
+        <br>
+        <button class="settingButtons" id="TimeTestCustom">Custom Seconds</button>
+        <br>
+        <br>
+        <h2 class="bigLabels">Data</h2>
+        <hr>
+        <br>
+        <button class="settingButtons" id="ResetData">Reset Data</button>
+
+    </div>
     
     <!-- SCRIPTS !-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
