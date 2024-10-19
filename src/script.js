@@ -219,11 +219,11 @@ function ReturnRandomQuote()
         // Get random quote.
         let quote = "";
         let lastItem = null;
-        for (let i = 0; i < 30; i++)
+        for (let i = 0; i < 100; i++)
         {
             // Add space at the end.
             let addedSpace = "";
-            if (i != 30- 1)
+            if (i != 100- 1)
             {
                 addedSpace = " ";
             }
