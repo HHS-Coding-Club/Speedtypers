@@ -152,6 +152,13 @@ a:hover
     transition: all 0.1s ease;
 }
 
+#copyright {
+    position: absolute;
+    bottom: 0px;
+    margin: 1px;
+    color: rgb(78, 78, 81);
+}
+
 @keyframes blink {
     0% { opacity: 0; }
     50% { opacity: 1; }  /* Fully visible at halfway point */

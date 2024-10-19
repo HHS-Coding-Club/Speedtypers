@@ -1,7 +1,7 @@
 // Oct, 16, 2024 - Evan & Rishi. MIT License. Simplified code and comments added to make it easier to read for beginners, although this already is pretty easy.
 
 // Imports
-import { data } from "./files/data.js";
+import { data } from "../assets/data.js";
 
 
 // CONSTANTS
