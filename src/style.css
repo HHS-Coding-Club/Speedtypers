@@ -12,10 +12,7 @@
  
 }
 
-#settings {
-    margin: 10px;
-    font-size: 1.5em;
-}
+
 
 .button {
     color: rgb(105, 105, 110);
@@ -57,7 +54,8 @@ hr {
 
 #buttonsList {
 
-
+    border: none;
+    border-top: rgb(105, 105, 110) 2px dotted;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,6 +65,11 @@ hr {
     right: 0;
     text-align: center;
   
+}
+
+#buttonsList button {
+    margin: 10px;
+    font-size: 1.5em;
 }
 
 .radios {
@@ -86,7 +89,41 @@ label {
     margin-top: 0px;
 }
 
+#bottomLink {
+    color: rgb(105, 105, 110);
+    transition: all 0.37s ease;
+}
+
+#bottomLink:hover {
+    color: white;
+    text-decoration: none;
+}
+
+a {
+    color: rgb(130, 144, 212);
+    text-decoration: none;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+
 #settingsMenu {
+    background-color: rgb(55, 55, 60);
+    border-radius: 2em;
+    display: none;
+    border: rgb(65, 65, 70) 3px solid;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 50em;
+    height: 35em;
+    padding: 20px;
+}
+#helpMenu {
     background-color: rgb(55, 55, 60);
     border-radius: 2em;
     display: none;
@@ -105,9 +142,28 @@ label {
     font-size: 20px;
 }
 
+#caret {
+    position: absolute;
+    width: 3px;
+    height: 33px; 
+    background-color: rgb(255, 255, 255);
+    border-radius: 2cm;
+    animation: blink 1.2s ease infinite;
+    transition: all 0.1s ease;
+}
+
+@keyframes blink {
+    0% { opacity: 0; }
+    50% { opacity: 1; }  /* Fully visible at halfway point */
+    100% { opacity: 0; } /* Fades out by the end */
+}
 
 #homeButton:hover {
     color: rgb(223, 223, 223);
+}
+
+#dataLabel {
+    display: none;
 }
 
 body {

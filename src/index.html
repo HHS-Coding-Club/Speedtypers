@@ -5,30 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Speedtypers</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="./files/tooltipster.bundle.min.css"/>
   </head>
   <body>
     <!-- STYLE !-->
     <p id="timeLeft">15</p>
-    <div class="paragraphBox">
-         
+    <p id="caret"></p>
+
+    <div class="paragraphBox">  
         <pre>
             <p id="paragraph">Failed to load sentence</p>
         </pre>
     </div>
     
      <div class="menu data">
-        <p id="accuracy">Start a test by pressing ENTER.</p>
-        <p id="wpm"></p>
-        <p id="timer"></p>
-        <p id="correctCharacters"></p>
-        <p id="rawwpm"></p>
-
+        <div id="dataLabel">
+          <p title="Data is based on the test. Different tests will have different high scores. Reset data in the settings."class="tooltip" style="margin-bottom: 10px;">Test Data</p>
+          <hr style=" width:30%; margin: 0 auto;">
+          <br>
+        </div>
+        <p class="tooltip" title="How many characters you typed correctly." id="accuracy">Start a test by pressing ENTER.</p>
+        <p class="tooltip" title="How fast you typed in words per minute." id="wpm"></p>
+        <p class="tooltip" title="How long it took to complete the test." id="timer"></p>
+        <p class="tooltip" title = "Characters you got in form Correct/Incorrect." id="correctCharacters"></p>
+        <p class="tooltip" title="How fast you typined words per minute not including misses." id="rawwpm"></p>
+        <p class="tooltip" title="The type of test you took." id="testType"></p>
         
     </div>
     
     <button id="homeButton">Speedtypers</button>
     <div id="buttonsList">
       <button class="button" id="settings">Settings</button>
+      <button class="button" id="help">Help</button>
+      <button class="button" id="help"><a id="bottomLink" href="https://github.com/HHS-Coding-Club/Speedtypers" target="_blank">Repository</a></button>
+      <button class="button" id="help"><a id="bottomLink" href="https://github.com/HHS-Coding-Club/Speedtypers/blob/main/src/script.js" target="_blank">Source</a></button>
     </div>
 
     <div id="settingsMenu">
@@ -40,7 +50,10 @@
         <br>
         <button class="settingButtons" id="RandomQuote">Random Quote</button>
         <br>
+        <br>  
+        <button class="settingButtons" id="CustomSentence">Custom Sentence</button>
         <br>
+        <br>  
         <h2 class="bigLabels">Timed</h2>
         <hr>
         <br>
@@ -56,9 +69,23 @@
         <button class="settingButtons" id="ResetData">Reset Data</button>
 
     </div>
+
+    <div id="helpMenu">
+      <h2 class="bigLabels">Tests</h2>
+      <hr>
+      <br>
+      <p>You can change the test type by opening up the settings at the bottom. Press ENTER to start a new test. You can also reset your data in settings too.</p>
+      <br>
+      <br>
+      <h2 class="bigLabels">About</h2>
+      <hr>
+      <br>
+      <p>A typing game made by the HHS coding club organization. Developed by Evan and Rishi. Want to contribute to the project? Make changes and send a pull request on the <a href="https://github.com/HHS-Coding-Club/Speedtypers" target="_blank">repository.</a> But you can also view our organization <a target="_blank" href="https://github.com/HHS-Coding-Club">here.</a></p>
+    </div>
     
     <!-- SCRIPTS !-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/4.2.8/js/tooltipster.bundle.min.js"></script>
     <script type="module" src="script.js"></script>
   </body>
 </html>

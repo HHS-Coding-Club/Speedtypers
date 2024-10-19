@@ -3,10 +3,11 @@
 // Imports
 import { data } from "./files/data.js";
 
+
 // CONSTANTS
 const quotes = data.quotes;
 const customWords = data.customWords;
-const DATA_KEY = "test4";
+const DATA_KEY = "test7";
 const keybinds = {
     "enter": function()
     {
@@ -20,6 +21,7 @@ const keybinds = {
 // VARIABLES
 let paragraphText = document.getElementById("paragraph");
 let accuracyText = $("#accuracy");
+let dataLabel = $("#dataLabel");
 let homeButton = document.getElementById("homeButton");
 let timerText = $("#timer");
 let rawWpmText = $("#rawwpm");
@@ -27,6 +29,7 @@ let correctCharacterText = $("#correctCharacters");
 let wpmText = $("#wpm");
 let timeLeft = $("#timeLeft");
 let settingsButton = document.getElementById("settings");
+let caret = document.getElementById("caret");
 
 // DYNAMIC VARIABLES
 let currentCharIndex = 0;
@@ -52,9 +55,12 @@ let gameData = {
     testType: "RandomWords",
     testSeconds: 15,
     testWords: 15,
+    testSentence: "None",
 };
+let addedSpace = [];
 let userData;
-
+let helpMenu = false;
+let customSentence;
 
 // FUNCTIONS
 function Start()
@@ -72,6 +78,17 @@ function Start()
     {
         // Parse the data.
         userData = JSON.parse(userData);
+
+        // Loop through game data values.
+        for (const [key, value] of Object.entries(gameData))
+        {
+            // Check if user doesn't have this value.
+            if (!userData[key])
+            {
+                userData[key] = value;
+                console.log("User did not have " + key + " in their data. Added it to value of " + value);
+            }
+        }
     }
 
     console.log(userData);
@@ -89,6 +106,28 @@ function SaveData()
 }
 
 
+function MoveCarat()
+{
+    // Get the current letter.
+    let range =  document.getElementById("currentLetter");
+
+    if (!document.getElementById("currentLetter"))
+    {
+        // Get the first character position
+        range = document.createRange();
+        const textNode = paragraphText.firstChild;
+        range.setStart(textNode, 0); // Position at first character
+        range.setEnd(textNode, 1);   // Length of 1 character
+    }
+        
+    // Get the position of currentLetter element
+    const rect = range.getBoundingClientRect();      
+
+    caret.style.left = `${rect.right - 16}px`;  // Position to the right of the letter
+    caret.style.top = `${rect.top - 1}px`;    // Align it vertically  
+    
+}
+
 function NewParagraph()
 {
     // Reset all the data.
@@ -97,6 +136,7 @@ function NewParagraph()
     misses = 0;
     timeStart = 0;
     timeEnd = 0;
+    addedSpace = [];
 
     // Set type.
     mode = userData.testType;
@@ -120,6 +160,9 @@ function NewParagraph()
 
     // Scroll to element.
     paragraphText.scrollIntoView();
+    MoveCarat();
+
+    $("#caret").fadeIn();
 
     // Start scroll
     if (mode == "TimeTest")
@@ -140,13 +183,11 @@ function NewParagraph()
 
     // Get rid of menus.
     $("#settingsMenu").fadeOut();
+    $("#helpMenu").fadeOut();
     $("#buttonsList").fadeOut();
     menuOpen = false;
 }
 
-function scale (number, inMin, inMax, outMin, outMax) {
-    return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-}
 
 function ReturnRandomQuote()
 {
@@ -178,11 +219,11 @@ function ReturnRandomQuote()
         // Get random quote.
         let quote = "";
         let lastItem = null;
-        for (let i = 0; i < (timeTestLength * 3 + 210); i++)
+        for (let i = 0; i < 30; i++)
         {
             // Add space at the end.
             let addedSpace = "";
-            if (i != (timeTestLength * 3 + 210)- 1)
+            if (i != 30- 1)
             {
                 addedSpace = " ";
             }
@@ -219,7 +260,22 @@ function ReturnRandomQuote()
             quote += chosenWord + addedSpace;
         }
         return quote;
+    } else if (mode == "CustomSentence")
+    {
+        if (!userData.testSentence)
+        {
+            alert("Sentence could not be loaded, please go to settings and input new one.");
+        }
+        else
+        {
+            return userData.testSentence;
+        }
     }
+}
+
+
+function AddSpaceBetweenCapitals(str) {
+    return  str.replace(/([A-Z])/g, ' $1').trim()
 }
 
 function LoadMenu(showData)
@@ -227,22 +283,59 @@ function LoadMenu(showData)
     // Turn off stuff.
     isTyping = false;
     
+    
     // Fade in and out objects
     $(".menu").fadeIn();
     $(".paragraphBox").fadeOut();
     $("#buttonsList").fadeIn();
+    $("#caret").fadeOut();
+    
     timeLeft.fadeOut();
     
     
     // Set data text.
     if (showData)
     {
-        wpmText.text("Wpm: " + CalculateWPM());
+        // Calculate WPM
+        const WPM = CalculateWPM();
+        const RawWPM = ((GetTotalWords())/((timeEnd-timeStart) / 60)).toFixed(1);
+
+        // Allow different test types.
+        if (!userData[mode + "-highestWPM"] )
+        {
+            userData[mode + "-highestWPM"] = 0;
+            console.log("Created new wpm data for test type " + mode);
+        }
+
+        // Allow different test types.
+        if (!userData[mode + "-highestRawWPM"] )
+        {
+            userData[mode + "-highestRawWPM"] = 0;
+            console.log("Created new raw wpm data for test type " + mode);
+        }
+
+        // Set text
+        dataLabel.fadeIn();
+        wpmText.text("Wpm: " + WPM + (parseFloat(WPM) > parseFloat(userData[mode + "-highestWPM"]) ? "👑" : ""));
         accuracyText.text("Accuracy: " + ((1 - (misses / currentQuote.length)) * 100).toFixed() + "%");
         timerText.text("Time: "+(timeEnd-timeStart).toFixed(3) + " s");
         correctCharacterText.text("Characters: " + (currentQuote.length - misses) + "/" + misses);
-        rawWpmText.text("Raw Wpm: " + ((GetTotalWords())/((timeEnd-timeStart) / 60)).toFixed(1));
+        rawWpmText.text("Raw Wpm: " + RawWPM  + (parseFloat(RawWPM) > parseFloat(userData[mode + "-highestRawWPM"]) ? "👑" : ""));
+        $("#testType").text("Test Type: " + (mode == "TimeTest" ? AddSpaceBetweenCapitals(mode) + " - " + timeTestLength + " s": AddSpaceBetweenCapitals(mode)));
         
+        // Check if beat scores.
+        if (parseFloat(WPM) > parseFloat(userData[mode + "-highestWPM"]))
+        {
+            // Set  the value.
+            userData[mode + "-highestWPM"] = WPM;
+        }
+
+        // Check if beat scores.
+        if (parseFloat(RawWPM) > parseFloat(userData[mode + "-highestRawWPM"]))
+        {
+            // Set  the value.
+            userData[mode + "-highestRawWPM"] = RawWPM;
+        }
     }
 }
 
@@ -280,9 +373,7 @@ function GetCorrectWords()
             // Add the incorrect word to the array if it's not already included
             if (!incorrectWords.includes(words[wordIndex])) {
                 incorrectWords.push(words[wordIndex]);
-            } else {
-                console.log("Word already exists in incorrectWords array");
-            }
+            }  
         }
     }
 
@@ -385,7 +476,7 @@ function UpdateParagraph(currentString)
 
     // Scroll to element.
     if ( document.getElementById("currentLetter"))  document.getElementById("currentLetter").scrollIntoView();
-    
+    MoveCarat();
 }
 
 function Keybinds(event)
@@ -408,8 +499,9 @@ function KeyPressed(event)
     let keyCode = event.key;
     let isBackspace = false;
 
+    
     // We don't want to listen for shifts.
-    if (keyCode == "Shift" || keyCode == "LeftShift" || keyCode == "Enter") return;
+    if (data.badKeys[keyCode]) return;
     
     // We do want to check for an backspace
     if (keyCode == "Backspace")
@@ -437,9 +529,6 @@ function KeyPressed(event)
         // Also reset the text.
         return;
     }
-
-   
-
     
     // Get the key we need to press next.
     let currentText = paragraphText.innerText[currentCharIndex];
@@ -455,6 +544,19 @@ function KeyPressed(event)
         timeStart = new Date().getTime() / 1000;
     }
     
+    // Check if timetset.
+    if (mode == "TimeTest")
+    {
+        // Add more words.
+        if (currentText == " " && !addedSpace[currentCharIndex])
+        {
+            // Show that we added a word.
+            addedSpace[currentCharIndex] = true;
+            currentString += " " + customWords[Math.floor(Math.random() * customWords.length)];
+            currentQuote = currentString;
+        }
+    }
+
     // Check if we pressed right key.
     if (keyCode == currentText)
     {
@@ -473,7 +575,7 @@ function KeyPressed(event)
      if (hasStartedTimer == false && mode == "TimeTest")
         {
             // Star the time test.
-            console.log("starting time test of " + timeTestLength);
+            console.log("Starting time test of " + timeTestLength);
             hasStartedTimer = true;
             currentTimeTest = new Date().getTime() / 1000;
     
@@ -490,7 +592,7 @@ function KeyPressed(event)
                     // End the test.
                     isTyping = false;
                     hasStartedTimer = false;
-                    console.log("time test end");
+                    console.log("Time test end");
     
                     // Clear interval and show menu.
                     clearInterval(timerInterval);
@@ -534,6 +636,17 @@ function OpenSettings()
     else $("#settingsMenu").fadeOut();
 }
 
+function OpenHelp()
+{
+    // Check if is typing.
+    if (isTyping) return;
+    helpMenu = !helpMenu;
+
+
+    if (helpMenu) $("#helpMenu").fadeIn();
+    else $("#helpMenu").fadeOut();
+}
+
 // CONNECTIONS
 window.addEventListener('keydown', KeyPressed);
 window.addEventListener('keydown', Keybinds);
@@ -541,6 +654,7 @@ homeButton.addEventListener('click', () => {
     LoadMenu(false);
 });
 settingsButton.addEventListener("click", OpenSettings);
+document.getElementById("help").addEventListener("click", OpenHelp);
 document.getElementById("RandomQuote").addEventListener("click", () => {
   
 
@@ -609,6 +723,27 @@ document.getElementById("TimeTestCustom").addEventListener("click", () => {
     // Alert user
     alert("Please enter a real number.");
 });
+
+window.addEventListener('resize', () => {
+    MoveCarat();
+});
+
+document.getElementById("CustomSentence").addEventListener("click", () => {
+    let words = prompt("Please enter a sentence.");
+    
+    // Check sentence.
+    if (words.length < 10000 && words != null && words != undefined)
+    {
+        userData.testType = "CustomSentence";
+        userData.testSentence = words;
+        $("#settingsMenu").fadeOut();
+
+        return;
+    }
+
+    // Alert
+    alert("Please enter a sentence under 10,000 characters and make sure it's a real sentence.");
+});
 document.getElementById("ResetData").addEventListener("click", () => {
     localStorage.setItem(DATA_KEY, JSON.stringify(gameData));
     userData = gameData;
@@ -619,5 +754,13 @@ window.onbeforeunload = function() {
     localStorage.setItem(DATA_KEY, JSON.stringify(userData));
   };
 
+  
+
 // INITIALIZATION
-Start();
+$(document).ready(function() {
+    $('.tooltip').tooltipster();
+    Start();
+});
+
+
+
