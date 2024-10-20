@@ -814,11 +814,12 @@ function transformStringWithRawWPM(str) {
                          .replace(/^\w/, c => c.toUpperCase()); // Capitalize first letter
   }
 
-
+  
   // Join the parts back with spaces around the dashes
   parts[2] = "";
   let wasQuote = false;
 
+  // Join the quotes together.
   if (parts[0][0] == "R" && parts[0][7] != "Q")
   {
     parts[1] += " Words";
