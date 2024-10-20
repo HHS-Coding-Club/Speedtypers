@@ -827,6 +827,10 @@ function transformStringWithRawWPM(str) {
   {
     wasQuote = true;
     parts[1] = "";
+  } else if (parts[0][0] == "C")
+  {
+    wasQuote = true;
+    parts[1] = "";
   }
   else
   {
